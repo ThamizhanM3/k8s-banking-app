@@ -366,6 +366,13 @@ user:
       limits:
         cpu: "100m"
         memory: "256Mi"
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 3
+      resource:
+        cpu:
+          UtilizationPercentage: 70
   port: "3001"
   resources:
     requests:
