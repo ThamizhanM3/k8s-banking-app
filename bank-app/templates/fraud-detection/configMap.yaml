@@ -4,5 +4,5 @@ metadata:
   name: {{ .Chart.Name }}-fraud-detection-config
   namespace: {{ .Values.namespace }}
 data:
-  MQ_URL: "{{ .Values.fraud.data.mqUrl }}"
+  MQ_URL: "{{ .Values.fraud.env.mqUrl }}"
   PORT: "{{ .Values.fraud.port }}"

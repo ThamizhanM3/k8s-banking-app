@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-frontend
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-frontend
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-frontend-container
+        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
+        resources:
+          requests:
+            memory: {{ .Values.frontend.resources.requests.memory }}
+            cpu: {{ .Values.frontend.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.frontend.resources.limits.memory }}
+            cpu: {{ .Values.frontend.resources.limits.cpu }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Chart.Name }}-frontend-config
+        ports:
+        - containerPort: {{ .Values.frontend.port }}
+        startupProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.frontend.port }}
+          initialDelaySeconds: 5
+          failureThreshold: 30
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.frontend.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.frontend.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3

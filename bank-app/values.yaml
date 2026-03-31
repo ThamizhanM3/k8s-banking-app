@@ -53,5 +53,28 @@ fraud:
       memory: "256Mi"
   service:
     type: NodePort
-  data:
+  env:
     mqUrl: "amqp://rabbitmq"
+
+frontend:
+  image:
+    repository: "thamizhanm3/bank-frontend"
+    tag: "v1"
+  replicas: 2
+  port: "80"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  service:
+    type: NodePort
+  env:
+    userUrl: "/api/user"
+    accountUrl: "/api/account"
+    txUrl: "/api/tx"
+    loanUrl: "/api/loan"
+    reportUrl: "/api/report"
+  
