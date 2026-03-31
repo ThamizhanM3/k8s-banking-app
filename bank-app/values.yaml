@@ -588,7 +588,7 @@ mysql:
       skip-host-cache
       skip-name-resolve"
     initSql: |
-      "CREATE DATABASE IF NOT EXISTS banking_db;
+      CREATE DATABASE IF NOT EXISTS banking_db;
       USE banking_db;
 
       CREATE TABLE IF NOT EXISTS users (
@@ -626,7 +626,7 @@ mysql:
       CREATE USER IF NOT EXISTS 'replicator'@'%'
         IDENTIFIED WITH mysql_native_password BY 'replicationpassword';
       GRANT REPLICATION SLAVE ON *.* TO 'replicator'@'%';
-      FLUSH PRIVILEGES;"
+      FLUSH PRIVILEGES;
     secret:
       key: MYSQL_ROOT_PASSWORD
     mySqlDbName: banking_db
