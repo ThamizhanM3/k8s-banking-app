@@ -7,7 +7,7 @@ metadata:
     app: {{ .Chart.Name }}-account
     version: {{ .Values.account.canary.version }}
 spec:
-  replicas: {{ .Values.account.replicas }} 
+  replicas: {{ .Values.account.canary.replicas }} 
   selector:
     matchLabels:
       app: {{ .Chart.Name }}-account

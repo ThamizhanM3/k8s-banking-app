@@ -1,0 +1,19 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Chart.Name }}-notification-hpa-stable
+  namespace: {{ .Values.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Chart.Name }}-notification-deployment-stable
+  minReplicas: {{ .Values.notification.stable.hpa.minReplicas }}
+  maxReplicas: {{ .Values.notification.stable.hpa.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.notification.stable.hpa.resource.cpu.UtilizationPercentage }}

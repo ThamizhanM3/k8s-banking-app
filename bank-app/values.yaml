@@ -73,6 +73,32 @@ config:
       memory: "256Mi"
   service:
     type: NodePort
+  stable:
+    version: "stable"
+    image:
+      repository: "yaswanthreddy1602/config-service"
+      tag: "v1"
+    replicas: 2
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+  canary:
+    version: "canary"
+    image:
+      repository: "yaswanthreddy1602/config-service"
+      tag: "v1"
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
 
 fraud:
   image:
@@ -137,26 +163,59 @@ frontend:
     reportUrl: "/api/report"
 
 loan:
-  image:
-    repository: "yaswanthreddy1602/loan-service"
-    tag: "v1"
-  replicas: 2
+  stable:
+    version: "stable"
+    image:
+      repository: "yaswanthreddy1602/loan-service"
+      tag: "v1"
+    replicas: 2
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 6
+      resource:
+        cpu:
+          UtilizationPercentage: 70
+
+  canary:
+    version: "canary"
+    image:
+      repository: "yaswanthreddy1602/loan-service"
+      tag: "v1"
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 3
+      resource:
+        cpu:
+          UtilizationPercentage: 70
+
   port: "3005"
-  resources:
-    requests:
-      cpu: "10m"
-      memory: "32Mi"
-    limits:
-      cpu: "100m"
-      memory: "256Mi"
-  service:
-    type: NodePort
+
   env:
     dbHost: "mysql"
     dbUser: "root"
     dbPass: "rootpassword"
     dbName: "banking_db"
     redisHost: "redis"
+
+  service:
+    type: NodePort
 
 notification:
   image:
@@ -177,20 +236,53 @@ notification:
     mqUrl: "amqp://rabbitmq"
   
 payment:
-  image:
-    repository: "yaswanthreddy1602/payment-service"
-    tag: "v1"
-  replicas: 2
+  stable:
+    version: "stable"
+    image:
+      repository: "yaswanthreddy1602/payment-service"
+      tag: "v1"
+    replicas: 2
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 6
+      resource:
+        cpu:
+          UtilizationPercentage: 70
+
+  canary:
+    version: "canary"
+    image:
+      repository: "yaswanthreddy1602/payment-service"
+      tag: "v1"
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 3
+      resource:
+        cpu:
+          UtilizationPercentage: 70
+
   port: "3004"
-  resources:
-    requests:
-      cpu: "10m"
-      memory: "32Mi"
-    limits:
-      cpu: "100m"
-      memory: "256Mi"
+
   env:
     accountUrl: "http://account-service:3002"
+
   service:
     type: NodePort
 
@@ -232,18 +324,50 @@ service:
     type: NodePort
 
 transaction:
-  image:
-    repository: "yaswanthreddy1602/transaction-service"
-    tag: "v1"
-  replicas: 2
+  stable:
+    version: "stable"
+    image:
+      repository: "yaswanthreddy1602/transaction-service"
+      tag: "v1"
+    replicas: 2
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 6
+      resource:
+        cpu:
+          UtilizationPercentage: 70
+
+  canary:
+    version: "canary"
+    image:
+      repository: "yaswanthreddy1602/transaction-service"
+      tag: "v1"
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 3
+      resource:
+        cpu:
+          UtilizationPercentage: 70
+
   port: "3003"
-  resources:
-    requests:
-      cpu: "10m"
-      memory: "32Mi"
-    limits:
-      cpu: "100m"
-      memory: "256Mi"
+
   env:
     dbHost: "mysql"
     dbUser: "root"
@@ -251,6 +375,7 @@ transaction:
     dbName: "banking_db"
     redisHost: "redis"
     mqUrl: "amqp://rabbitmq"
+
   service:
     type: NodePort
 

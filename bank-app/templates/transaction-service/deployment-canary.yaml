@@ -1,35 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
-  name: {{ .Chart.Name }}-transaction-deployment
+  name: {{ .Chart.Name }}-transaction-deployment-canary
   namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-transaction
+    version: {{ .Values.transaction.canary.version }}
+
 spec:
-  replicas: 2
+  replicas: {{ .Values.transaction.canary.replicas }}
+
   selector:
     matchLabels:
       app: {{ .Chart.Name }}-transaction
+
   template:
     metadata:
       labels:
         app: {{ .Chart.Name }}-transaction
+        version: {{ .Values.transaction.canary.version }}
+
     spec:
       containers:
         - name: {{ .Chart.Name }}-transaction
-          image: {{ .Values.transaction.image.repository }}:{{ .Values.transaction.image.tag }}
+
+          image: {{ .Values.transaction.canary.image.repository }}:{{ .Values.transaction.canary.image.tag }}
+
           resources:
             requests:
-              memory: {{ .Values.transaction.resources.requests.memory }}
-              cpu: {{ .Values.transaction.resources.requests.cpu }}
+              memory: {{ .Values.transaction.canary.resources.requests.memory }}
+              cpu: {{ .Values.transaction.canary.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.transaction.resources.limits.memory }}
-              cpu: {{ .Values.transaction.resources.limits.cpu }}
+              memory: {{ .Values.transaction.canary.resources.limits.memory }}
+              cpu: {{ .Values.transaction.canary.resources.limits.cpu }}
+
           ports:
             - containerPort: {{ .Values.transaction.port }}
+
           envFrom:
             - secretRef:
                 name: {{ .Chart.Name }}-transaction-secret
             - configMapRef:
                 name: {{ .Chart.Name }}-transaction-config
+
           startupProbe:
             httpGet:
               path: /health
@@ -37,6 +50,7 @@ spec:
             initialDelaySeconds: 5
             failureThreshold: 30
             periodSeconds: 5
+
           readinessProbe:
             httpGet:
               path: /health
@@ -44,6 +58,7 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
             failureThreshold: 3
+
           livenessProbe:
             httpGet:
               path: /health

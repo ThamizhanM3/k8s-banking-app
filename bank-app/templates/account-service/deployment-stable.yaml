@@ -8,7 +8,7 @@ metadata:
     version: {{ .Values.account.stable.version }}
 spec:
   replicas: {{ .Values.account.stable.replicas }} 
-  selector:
+  selector: 
     matchLabels:
       app: {{ .Chart.Name }}-account
   template:
