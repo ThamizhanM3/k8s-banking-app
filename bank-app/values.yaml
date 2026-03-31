@@ -246,10 +246,39 @@ loan:
     type: NodePort
 
 notification:
-  image:
-    repository: "yaswanthreddy1602/notification-service"
-    tag: "v1"
-  replicas: 2
+  stable:
+    version: "stable"
+    image:
+      repository: "yaswanthreddy1602/notification-service"
+      tag: "v1"
+    replicas: 2
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 6
+      resource:
+        cpu:
+          UtilizationPercentage: 70
+  canary:
+    version: "canary"
+    image:
+      repository: "yaswanthreddy1602/notification-service"
+      tag: "v1"
+    replicas: 1
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 3
+      resource:
+        cpu:
+          UtilizationPercentage: 70
   port: "3006"
   resources:
     requests:
