@@ -5,4 +5,4 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   init.sql: |
-    {{ .Values.mysql.initSql | nindent 4 }}
+{{ .Values.mysql.initSql | nindent 4 }}
