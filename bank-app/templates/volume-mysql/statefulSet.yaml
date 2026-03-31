@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Chart.Name }}-mysql
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: {{ .Values.mysql.serviceName }}
+  replicas: {{ .Values.mysql.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-mysql
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-mysql
+    spec:
+      initContainers:
+        - name: {{ .Chart.Name }}-init-mysql
+          image: {{ .Values.mysql.image }}
+          command:
+            - bash
+            - "-c"
+            - |
+              set -ex
+              [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+              ordinal=${BASH_REMATCH[1]}
+
+              mkdir -p /mnt/conf.d
+
+              printf "[mysqld]\nserver-id=%d\n" "$((100 + $ordinal))" > /mnt/conf.d/server-id.cnf
+
+              if [[ $ordinal -eq 0 ]]; then
+                cp /mnt/config-map/primary.cnf /mnt/conf.d/base.cnf
+              else
+                cp /mnt/config-map/replica.cnf /mnt/conf.d/base.cnf
+              fi
+          volumeMounts:
+            - name: conf
+              mountPath: /mnt/conf.d
+            - name: config-map
+              mountPath: /mnt/config-map
+      containers:
+        - name: {{ .Chart.Name }}-mysql
+          image: {{ .Values.mysql.image }}
+          ports:
+            - name: {{ .Chart.Name }}-mysql
+              containerPort: {{ .Values.mysql.port }}
+          resources:
+            requests:
+              cpu: {{ .Values.mysql.resources.requests.cpu }}
+              memory: {{ .Values.mysql.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.mysql.resources.limits.cpu }}
+              memory: {{ .Values.mysql.resources.limits.memory }}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-mysql-secret
+                  key: {{ .Values.mysql.env.secret.key }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.mysql.env.mySqlDbName }}
+            - name: MYSQL_ROOT_HOST
+              value: {{ .Values.mysql.env.mySqlDbHost }}
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+            - name: conf
+              mountPath: /etc/mysql/conf.d
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d
+          startupProbe:
+            exec:
+              command: ["mysqladmin","ping","-h","127.0.0.1"]
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 40
+            timeoutSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["mysqladmin","ping","-h","127.0.0.1"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 90
+            periodSeconds: 20
+            timeoutSeconds: 10
+      volumes:
+        - name: conf
+          emptyDir: {}
+        - name: config-map
+          configMap:
+            name: {{ .Chart.Name }}-mysql-config
+        - name: init-script
+          configMap:
+            name: {{ .Chart.Name }}-mysql-init-script
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: nfs-client
+        resources:
+          requests:
+            storage: 1Gi
