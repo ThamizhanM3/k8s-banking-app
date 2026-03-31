@@ -77,4 +77,25 @@ frontend:
     txUrl: "/api/tx"
     loanUrl: "/api/loan"
     reportUrl: "/api/report"
-  
+
+loan:
+  image:
+    repository: "yaswanthreddy1602/loan-service"
+    tag: "v1"
+  replicas: 2
+  port: "3005"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  service:
+    type: NodePort
+  env:
+    dbHost: "mysql"
+    dbUser: "root"
+    dbPass: "rootpassword"
+    dbName: "banking_db"
+    redisHost: "redis"

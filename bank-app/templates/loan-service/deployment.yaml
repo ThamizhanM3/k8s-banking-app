@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-loan
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.loan.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-loan
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-loan
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-loan-container
+        image: {{ .Values.loan.image.repository }}:{{ .Values.loan.image.tag }}
+        resources:
+          requests:
+            memory: {{ .Values.loan.resources.requests.memory }}
+            cpu: {{ .Values.loan.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.loan.resources.limits.memory }}
+            cpu: {{ .Values.loan.resources.limits.cpu }}
+        ports:
+        - containerPort: {{ .Values.loan.port }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Chart.Name }}-loan-config
+        - secretRef:
+            name: {{ .Chart.Name }}-loan-secret
+        startupProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.loan.port }}
+          initialDelaySeconds: 5
+          failureThreshold: 30
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.loan.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.loan.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3
