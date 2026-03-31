@@ -61,7 +61,7 @@ spec:
             - name: MYSQL_DATABASE
               value: {{ .Values.mysql.env.mySqlDbName }}
             - name: MYSQL_ROOT_HOST
-              value: {{ .Values.mysql.env.mySqlDbHost }}
+              value: "%"
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql

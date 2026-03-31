@@ -630,4 +630,3 @@ mysql:
     secret:
       key: MYSQL_ROOT_PASSWORD
     mySqlDbName: banking_db
-    mySqlDbHost: "%"
