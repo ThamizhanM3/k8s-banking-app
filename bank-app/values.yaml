@@ -366,13 +366,14 @@ user:
       limits:
         cpu: "100m"
         memory: "256Mi"
-    hpa:
-      enabled: true
-      minReplicas: 1
-      maxReplicas: 3
-      resource:
-        cpu:
-          UtilizationPercentage: 70
+  port: "3001"
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
   env:
     dbHost: "mysql"
     dbUser: "root"
