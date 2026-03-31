@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: {{ .Chart.Name }}-account
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.account.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-account
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-account
+    spec:
+      containers:
+        - name: account
+          image: {{ .Values.account.image.repository }}:{{ .Values.account.image.tag }}
+          resources:
+            requests:
+              memory: {{ .Values.account.resources.requests.memory }}
+              cpu: {{ .Values.account.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.account.resources.limits.memory }}
+              cpu: {{ .Values.account.resources.limits.cpu }}
+          ports:
+            - containerPort: {{ .Values.account.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Chart.Name }}-account-secret
+            - configMapRef:
+                name: {{ .Chart.Name }}-account-config
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.account.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.account.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.account.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3

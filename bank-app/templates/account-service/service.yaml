@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-account-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: {{ .Chart.Name }}-account
+  ports:
+    - port: {{ .Values.account.port }}
+      targetPort: {{ .Values.account.port }}
+  type: {{ .Values.account.service.type }}
