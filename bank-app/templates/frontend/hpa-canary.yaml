@@ -1,7 +1,7 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Chart.Name }}-frontend-hpa
+  name: {{ .Chart.Name }}-frontend-hpa-canary
   namespace: {{ .Values.namespace }}
 spec:
   scaleTargetRef:
