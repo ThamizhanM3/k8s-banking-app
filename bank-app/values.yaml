@@ -21,3 +21,19 @@ account:
     redisHost: "redis"
   service:
     type: NodePort
+
+config:
+  image:
+    repository: "yaswanthreddy1602/config-service"
+    tag: "v1"
+  replicas: 2
+  port: "3008"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  service:
+    type: NodePort

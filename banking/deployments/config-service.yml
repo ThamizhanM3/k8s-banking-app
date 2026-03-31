@@ -14,7 +14,7 @@ metadata:
   name: config-deployment
   namespace: banking-app
  
-spec:
+spec: 
  
   replicas: 2
  

@@ -4,7 +4,7 @@ metadata:
   name: {{ .Chart.Name }}-account
   namespace: {{ .Values.namespace }}
 spec:
-  replicas: {{ .Values.account.replicas }}
+  replicas: {{ .Values.account.replicas }} 
   selector:
     matchLabels:
       app: {{ .Chart.Name }}-account
@@ -14,7 +14,7 @@ spec:
         app: {{ .Chart.Name }}-account
     spec:
       containers:
-        - name: account
+        - name: account-container
           image: {{ .Values.account.image.repository }}:{{ .Values.account.image.tag }}
           resources:
             requests:
