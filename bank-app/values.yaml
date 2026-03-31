@@ -156,3 +156,19 @@ reporting:
     dbName: "banking_db"
   service:
     type: NodePort
+
+service:
+  image:
+    repository: "yaswanthreddy1602/service-discovery"
+    tag: "v1"
+  replicas: 2
+  port: "3009"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  service:
+    type: NodePort
