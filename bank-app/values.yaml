@@ -1,14 +1,36 @@
 namespace: banking-app
 
 account:
-  image: 
-    repository: "yaswanthreddy1602/account-service"
-    tag: "v1"
-  replicas: 2
+  stable:
+    version: "stable"
+    image:
+      repository: "yaswanthreddy1602/account-service"
+      tag: "v1"
+    replicas: 2
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+  canary:
+    version: "canary"
+    image:
+      repository: "yaswanthreddy1602/account-service"
+      tag: "v1"
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
   port: "3002"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -21,13 +43,6 @@ account:
     redisHost: "redis"
   service:
     type: NodePort
-  hpa:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 6
-    resource:
-      cpu:
-        UtilizationPercentage: 70
 
 config:
   image:
@@ -37,7 +52,7 @@ config:
   port: "3008"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -53,7 +68,7 @@ fraud:
   port: "3007"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -93,7 +108,7 @@ frontend:
   port: "80"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -106,13 +121,6 @@ frontend:
     txUrl: "/api/tx"
     loanUrl: "/api/loan"
     reportUrl: "/api/report"
-  hpa:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 6
-    resource:
-      cpu:
-        UtilizationPercentage: 70
 
 loan:
   image:
@@ -122,7 +130,7 @@ loan:
   port: "3005"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -144,7 +152,7 @@ notification:
   port: "3006"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -162,7 +170,7 @@ payment:
   port: "3004"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -180,7 +188,7 @@ reporting:
   port: "3010"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -201,7 +209,7 @@ service:
   port: "3009"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -217,7 +225,7 @@ transaction:
   port: "3003"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"
@@ -240,7 +248,7 @@ user:
   port: "3001"
   resources:
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "32Mi"
     limits:
       cpu: "100m"

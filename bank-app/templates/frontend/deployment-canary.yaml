@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-frontend-deployment
+  name: {{ .Chart.Name }}-frontend-deployment-canary
   namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Chart.Name }}-frontend
@@ -15,15 +15,15 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}-frontend
-        version: {{ .Values.frontend.version }}
+        version: {{ .Values.frontend.canary.version }}
     spec:
       containers:
       - name: {{ .Chart.Name }}-frontend-container
-        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
+        image: {{ .Values.frontend.canary.image.repository }}:{{ .Values.frontend.canary.image.tag }}
         resources:
           requests:
             memory: {{ .Values.frontend.resources.requests.memory }}
-            cpu: {{ .Values.frontend.resources.requests.cpu }}
+            cpu: {{ .Values.frontend.resources.requests.cpu }} 
           limits:
             memory: {{ .Values.frontend.resources.limits.memory }}
             cpu: {{ .Values.frontend.resources.limits.cpu }}

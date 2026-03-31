@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: {{ .Chart.Name }}-account-deployment-canary
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-account
+    version: {{ .Values.account.canary.version }}
+spec:
+  replicas: {{ .Values.account.replicas }} 
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-account
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-account
+        version: {{ .Values.account.canary.version }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-account-container
+          image: {{ .Values.account.canary.image.repository }}:{{ .Values.account.canary.image.tag }}
+          resources:
+            requests:
+              memory: {{ .Values.account.canary.resources.requests.memory }}
+              cpu: {{ .Values.account.canary.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.account.canary.resources.limits.memory }}
+              cpu: {{ .Values.account.canary.resources.limits.cpu }}
+          ports:
+            - containerPort: {{ .Values.account.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Chart.Name }}-account-secret
+            - configMapRef:
+                name: {{ .Chart.Name }}-account-config
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.account.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.account.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.account.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3

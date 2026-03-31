@@ -15,7 +15,7 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}-frontend
-        version: {{ .Values.frontend.version }}
+        version: {{ .Values.frontend.stable.version }}
     spec:
       containers:
       - name: {{ .Chart.Name }}-frontend-container
