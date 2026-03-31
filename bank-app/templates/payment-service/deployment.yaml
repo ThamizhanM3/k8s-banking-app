@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-payment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.payment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-payment
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-payment
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-payment-container
+          image: {{ .Values.payment.image.repository }}:{{ .Values.payment.image.tag }}
+          resources:
+            requests:
+              memory: {{ .Values.payment.resources.requests.memory }}
+              cpu: {{ .Values.payment.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.payment.resources.limits.memory }}
+              cpu: {{ .Values.payment.resources.limits.cpu }}
+          ports:
+            - containerPort: {{ .Values.payment.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Chart.Name }}-payment-secret
+            - configMapRef:
+                name: {{ .Chart.Name }}-payment-config
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.payment.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.payment.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.payment.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3

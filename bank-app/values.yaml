@@ -117,3 +117,19 @@ notification:
     type: NodePort
   env:
     mqUrl: "amqp://rabbitmq"
+  
+payment:
+  image:
+    repository: "yaswanthreddy1602/payment-service"
+    tag: "v1"
+  replicas: 2
+  port: "3004"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  env:
+    accountUrl: "http://account-service:3002"
