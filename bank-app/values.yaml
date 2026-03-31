@@ -272,6 +272,13 @@ notification:
       repository: "yaswanthreddy1602/notification-service"
       tag: "v1"
     replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
     hpa:
       enabled: true
       minReplicas: 1
