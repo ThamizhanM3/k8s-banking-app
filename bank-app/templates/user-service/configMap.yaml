@@ -4,8 +4,8 @@ metadata:
   name: {{ .Chart.Name }}-user-config
   namespace: {{ .Release.Namespace }}
 data:
-  DB_HOST: {{ .Values.user.dbHost }}
-  DB_USER: {{ .Values.user.dbUser }}
-  DB_NAME: {{ .Values.user.dbName }}
-  REDIS_HOST: {{ .Values.user.redisHost }}
-  PORT: {{ .Values.user.port }}
+  DB_HOST: "{{ .Values.user.dbHost }}"
+  DB_USER: "{{ .Values.user.dbUser }}"
+  DB_NAME: "{{ .Values.user.dbName }}"
+  REDIS_HOST: "{{ .Values.user.redisHost }}"
+  PORT: "{{ .Values.user.port }}"

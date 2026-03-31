@@ -3,8 +3,11 @@ kind: Deployment
 metadata:
   name: {{ .Chart.Name }}-frontend-deployment
   namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-frontend
+    version: {{ .Values.frontend.canary.version }}
 spec:
-  replicas: {{ .Values.frontend.replicas }}
+  replicas: {{ .Values.frontend.canary.replicas }}
   selector:
     matchLabels:
       app: {{ .Chart.Name }}-frontend
@@ -12,6 +15,7 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}-frontend
+        version: {{ .Values.frontend.version }}
     spec:
       containers:
       - name: {{ .Chart.Name }}-frontend-container

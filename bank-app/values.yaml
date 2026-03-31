@@ -21,6 +21,13 @@ account:
     redisHost: "redis"
   service:
     type: NodePort
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    resource:
+      cpu:
+        UtilizationPercentage: 70
 
 config:
   image:
@@ -57,10 +64,32 @@ fraud:
     mqUrl: "amqp://rabbitmq"
 
 frontend:
-  image:
-    repository: "thamizhanm3/bank-frontend"
-    tag: "v1"
-  replicas: 2
+  stable:
+    version: "stable"
+    image:
+      repository: "thamizhanm3/bank-frontend"
+      tag: "v1"
+    replicas: 2
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 6
+      resource:
+        cpu:
+          UtilizationPercentage: 70
+  canary:
+    version: "canary"
+    image:
+      repository: "thamizhanm3/bank-frontend"
+      tag: "v1"
+    replicas: 1
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 3
+      resource:
+        cpu:
+          UtilizationPercentage: 70
   port: "80"
   resources:
     requests:
@@ -77,6 +106,13 @@ frontend:
     txUrl: "/api/tx"
     loanUrl: "/api/loan"
     reportUrl: "/api/report"
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    resource:
+      cpu:
+        UtilizationPercentage: 70
 
 loan:
   image:
