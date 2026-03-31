@@ -1,0 +1,22 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Chart.Name }}-loan-hpa-stable
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Chart.Name }}-loan-deployment-stable
+
+  minReplicas: {{ .Values.loan.stable.hpa.minReplicas }}
+  maxReplicas: {{ .Values.loan.stable.hpa.maxReplicas }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.loan.stable.hpa.resource.cpu.UtilizationPercentage }}

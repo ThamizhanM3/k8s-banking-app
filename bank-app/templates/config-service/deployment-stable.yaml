@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: {{ .Chart.Name }}-config-deployment-stable
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-config
+    version: {{ .Values.config.stable.version }}
+
+spec:
+  replicas: {{ .Values.config.stable.replicas }}
+
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-config
+
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-config
+        version: {{ .Values.config.stable.version }}
+
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-config-container
+
+          image: {{ .Values.config.stable.image.repository }}:{{ .Values.config.stable.image.tag }}
+
+          resources:
+            requests:
+              memory: {{ .Values.config.stable.resources.requests.memory }}
+              cpu: {{ .Values.config.stable.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.config.stable.resources.limits.memory }}
+              cpu: {{ .Values.config.stable.resources.limits.cpu }}
+
+          ports:
+            - containerPort: {{ .Values.config.port }}
+
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-config-config
+
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.config.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.config.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.config.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3

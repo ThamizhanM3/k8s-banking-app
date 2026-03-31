@@ -1,0 +1,22 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Chart.Name }}-loan-hpa-canary
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Chart.Name }}-loan-deployment-canary
+
+  minReplicas: {{ .Values.loan.canary.hpa.minReplicas }}
+  maxReplicas: {{ .Values.loan.canary.hpa.maxReplicas }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.loan.canary.hpa.resource.cpu.UtilizationPercentage }}

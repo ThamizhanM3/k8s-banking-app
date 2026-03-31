@@ -1,10 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-notification-deployment
+  name: {{ .Chart.Name }}-notification-deployment-canary
   namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-notification
+    version: {{ .Values.notification.canary.version }}
 spec:
-  replicas: {{ .Values.notification.replicas }}
+  replicas: {{ .Values.notification.canary.replicas }}
   selector:
     matchLabels:
       app: {{ .Chart.Name }}-notification
@@ -12,17 +15,18 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}-notification
+        version: {{ .Values.notification.canary.version }}
     spec:
       containers:
       - name: {{ .Chart.Name }}-notification-container
-        image: {{ .Values.notification.image.repository }}:{{ .Values.notification.image.tag }}
+        image: {{ .Values.notification.canary.image.repository }}:{{ .Values.notification.canary.image.tag }}
         resources:
           requests:
-            memory: {{ .Values.notification.resources.requests.memory }}
-            cpu: {{ .Values.notification.resources.requests.cpu }}
+            memory: {{ .Values.notification.canary.resources.requests.memory }}
+            cpu: {{ .Values.notification.canary.resources.requests.cpu }}
           limits:
-            memory: {{ .Values.notification.resources.limits.memory }}
-            cpu: {{ .Values.notification.resources.limits.cpu }}
+            memory: {{ .Values.notification.canary.resources.limits.memory }}
+            cpu: {{ .Values.notification.canary.resources.limits.cpu }}
         ports:
         - containerPort: {{ .Values.notification.port }}
         envFrom:

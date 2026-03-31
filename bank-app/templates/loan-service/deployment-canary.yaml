@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: {{ .Chart.Name }}-loan-deployment-canary
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-loan
+    version: {{ .Values.loan.canary.version }}
+
+spec:
+  replicas: {{ .Values.loan.canary.replicas }}
+
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-loan
+
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-loan
+        version: {{ .Values.loan.canary.version }}
+
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-loan-container
+
+          image: {{ .Values.loan.canary.image.repository }}:{{ .Values.loan.canary.image.tag }}
+
+          resources:
+            requests:
+              memory: {{ .Values.loan.canary.resources.requests.memory }}
+              cpu: {{ .Values.loan.canary.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.loan.canary.resources.limits.memory }}
+              cpu: {{ .Values.loan.canary.resources.limits.cpu }}
+
+          ports:
+            - containerPort: {{ .Values.loan.port }}
+
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-loan-config
+            - secretRef:
+                name: {{ .Chart.Name }}-loan-secret
+
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.loan.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.loan.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.loan.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3

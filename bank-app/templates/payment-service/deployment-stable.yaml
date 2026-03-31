@@ -1,35 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-payment-deployment
+  name: {{ .Chart.Name }}-payment-deployment-stable
   namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-payment
+    version: {{ .Values.payment.stable.version }}
+
 spec:
-  replicas: {{ .Values.payment.replicas }}
+  replicas: {{ .Values.payment.stable.replicas }}
+
   selector:
     matchLabels:
       app: {{ .Chart.Name }}-payment
+
   template:
     metadata:
       labels:
         app: {{ .Chart.Name }}-payment
+        version: {{ .Values.payment.stable.version }}
+
     spec:
       containers:
         - name: {{ .Chart.Name }}-payment-container
-          image: {{ .Values.payment.image.repository }}:{{ .Values.payment.image.tag }}
+
+          image: {{ .Values.payment.stable.image.repository }}:{{ .Values.payment.stable.image.tag }}
+
           resources:
             requests:
-              memory: {{ .Values.payment.resources.requests.memory }}
-              cpu: {{ .Values.payment.resources.requests.cpu }}
+              memory: {{ .Values.payment.stable.resources.requests.memory }}
+              cpu: {{ .Values.payment.stable.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.payment.resources.limits.memory }}
-              cpu: {{ .Values.payment.resources.limits.cpu }}
+              memory: {{ .Values.payment.stable.resources.limits.memory }}
+              cpu: {{ .Values.payment.stable.resources.limits.cpu }}
+
           ports:
             - containerPort: {{ .Values.payment.port }}
+
           envFrom:
             - secretRef:
                 name: {{ .Chart.Name }}-payment-secret
             - configMapRef:
                 name: {{ .Chart.Name }}-payment-config
+
           startupProbe:
             httpGet:
               path: /health
@@ -37,6 +50,7 @@ spec:
             initialDelaySeconds: 5
             failureThreshold: 30
             periodSeconds: 5
+
           readinessProbe:
             httpGet:
               path: /health
@@ -44,6 +58,7 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
             failureThreshold: 3
+
           livenessProbe:
             httpGet:
               path: /health
