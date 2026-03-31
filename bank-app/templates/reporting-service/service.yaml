@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-reporting-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: {{ .Chart.Name }}-reporting
+  ports:
+  - port: {{ .Values.reporting.port }}
+    targetPort: {{ .Values.reporting.port }}
+  type: {{ .Values.reporting.service.type }}

@@ -133,3 +133,26 @@ payment:
       memory: "256Mi"
   env:
     accountUrl: "http://account-service:3002"
+  service:
+    type: NodePort
+
+reporting:
+  image:
+    repository: "yaswanthreddy1602/reporting-service"
+    tag: "v1"
+  replicas: 2
+  port: "3010"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  env:
+    dbHost: "mysql"
+    dbUser: "root"
+    dbPass: "rootpassword"
+    dbName: "banking_db"
+  service:
+    type: NodePort
