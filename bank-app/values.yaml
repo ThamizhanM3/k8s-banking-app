@@ -37,3 +37,21 @@ config:
       memory: "256Mi"
   service:
     type: NodePort
+
+fraud:
+  image:
+    repository: "yaswanthreddy1602/fraud-detection-service"
+    tag: "v1"
+  replicas: 2
+  port: "3007"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  service:
+    type: NodePort
+  data:
+    mqUrl: "amqp://rabbitmq"

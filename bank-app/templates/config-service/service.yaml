@@ -8,5 +8,5 @@ spec:
   selector:
     app: {{ .Chart.Name }}-config
   ports:
-    - port: {{ .Values.config.service.port }}
+    - port: {{ .Values.config.port }}
       targetPort: {{ .Values.config.port }}

@@ -14,7 +14,7 @@ spec:
         app: {{ .Chart.Name }}-config
     spec:
       containers:
-        - name: config-container
+        - name: {{ .Chart.Name }}-config-container
           image: {{ .Values.config.image.repository }}:{{ .Values.config.image.tag }}
           resources:
             requests:

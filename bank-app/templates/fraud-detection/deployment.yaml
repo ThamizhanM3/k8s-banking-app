@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-fraud-detection
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.fraud.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-fraud-detection
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-fraud-detection
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-fraud-detection-container
+          image: {{ .Values.fraud.image.repository }}:{{ .Values.fraud.image.tag }}
+          resources:
+            requests:
+              memory: {{ .Values.fraud.resources.requests.memory }}
+              cpu: {{ .Values.fraud.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.fraud.resources.limits.memory }}
+              cpu: {{ .Values.fraud.resources.limits.cpu }}
+          ports:
+            - containerPort: {{ .Values.fraud.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-fraud-detection-config
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.fraud.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.fraud.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.fraud.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
