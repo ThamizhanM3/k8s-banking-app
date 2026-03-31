@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-notification
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.notification.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-notification
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-notification
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-notification-container
+        image: {{ .Values.notification.image.repository }}:{{ .Values.notification.image.tag }}
+        resources:
+          requests:
+            memory: {{ .Values.notification.resources.requests.memory }}
+            cpu: {{ .Values.notification.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.notification.resources.limits.memory }}
+            cpu: {{ .Values.notification.resources.limits.cpu }}
+        ports:
+        - containerPort: {{ .Values.notification.port }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Chart.Name }}-notification-config
+        startupProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.notification.port }}
+          initialDelaySeconds: 5
+          failureThreshold: 30
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.notification.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.notification.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3

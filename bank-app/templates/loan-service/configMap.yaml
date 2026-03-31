@@ -7,4 +7,4 @@ data:
   DB_HOST: {{ .Values.loan.env.dbHost }}
   DB_USER: {{ .Values.loan.env.dbUser }}
   DB_NAME: {{ .Values.loan.env.dbName }}
-  PORT: {{ .Values.loan.port }}
+  PORT: "{{ .Values.loan.port }}"

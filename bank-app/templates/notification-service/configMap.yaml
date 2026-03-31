@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-notification-config
+  namespace: {{ .Values.namespace }}
+data:
+  MQ_URL: "{{ .Values.notification.env.mqUrl }}"
+  PORT: "{{ .Values.notification.port }}"

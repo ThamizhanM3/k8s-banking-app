@@ -99,3 +99,21 @@ loan:
     dbPass: "rootpassword"
     dbName: "banking_db"
     redisHost: "redis"
+
+notification:
+  image:
+    repository: "yaswanthreddy1602/notification-service"
+    tag: "v1"
+  replicas: 2
+  port: "3006"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  service:
+    type: NodePort
+  env:
+    mqUrl: "amqp://rabbitmq"
