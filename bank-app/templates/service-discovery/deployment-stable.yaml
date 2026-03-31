@@ -1,10 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-service-deployment
+  name: {{ .Chart.Name }}-service-deployment-stable
   namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-service
+    version: {{ .Values.service.stable.version }}
 spec:
-  replicas: {{ .Values.service.replicas }}
+  replicas: {{ .Values.service.stable.replicas }}
   selector:
     matchLabels:
       app: {{  .Chart.Name }}-service
@@ -12,17 +15,18 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}-service
+        version: {{ .Values.service.stable.version }}
     spec:
       containers:
         - name: {{ .Chart.Name }}-service-container
-          image: {{ .Values.service.image.repository }}:{{ .Values.service.image.tag }}
+          image: {{ .Values.service.stable.image.repository }}:{{ .Values.service.stable.image.tag }}
           resources:
             requests:
-              memory: {{ .Values.service.resources.requests.memory }}
-              cpu: {{ .Values.service.resources.requests.cpu }}
+              memory: {{ .Values.service.stable.resources.requests.memory }}
+              cpu: {{ .Values.service.stable.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.service.resources.limits.memory }}
-              cpu: {{ .Values.service.resources.limits.cpu }}
+              memory: {{ .Values.service.stable.resources.limits.memory }}
+              cpu: {{ .Values.service.stable.resources.limits.cpu }}
           ports:
             - containerPort: {{ .Values.service.port }}
           envFrom:

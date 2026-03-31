@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-service-deployment-canary
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-service
+    version: {{ .Values.service.canary.version }}
+spec:
+  replicas: {{ .Values.service.canary.replicas }}
+  selector:
+    matchLabels:
+      app: {{  .Chart.Name }}-service
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-service
+        version: {{ .Values.service.canary.version }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-service-container
+          image: {{ .Values.service.canary.image.repository }}:{{ .Values.service.canary.image.tag }}
+          resources:
+            requests:
+              memory: {{ .Values.service.canary.resources.requests.memory }}
+              cpu: {{ .Values.service.canary.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.service.canary.resources.limits.memory }}
+              cpu: {{ .Values.service.canary.resources.limits.cpu }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-service-config
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3

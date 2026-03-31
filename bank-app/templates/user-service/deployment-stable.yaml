@@ -1,8 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-user-deployment
+  name: {{ .Chart.Name }}-user-deployment-stable
   namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}-user
+    version: {{ .Values.user.stable.version }}
 spec:
   replicas: {{ .Values.user.replicas }}
   selector:
@@ -12,17 +15,18 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}-user
+        version: {{ .Values.user.stable.version }}
     spec:
       containers:
         - name: {{ .Chart.Name }}-user-container
-          image: {{ .Values.user.image.repository }}:{{ .Values.user.image.tag }}
+          image: {{ .Values.user.stable.image.repository }}:{{ .Values.user.stable.image.tag }}
           resources:
             requests:
-              memory: {{ .Values.user.resources.requests.memory }}
-              cpu: {{ .Values.user.resources.requests.cpu }}
+              memory: {{ .Values.user.stable.resources.requests.memory }}
+              cpu: {{ .Values.user.stable.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.user.resources.limits.memory }}
-              cpu: {{ .Values.user.resources.limits.cpu }}
+              memory: {{ .Values.user.stable.resources.limits.memory }}
+              cpu: {{ .Values.user.stable.resources.limits.cpu }}
           ports:
             - containerPort: {{ .Values.user.port }}
           envFrom:
