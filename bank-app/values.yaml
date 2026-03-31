@@ -195,3 +195,25 @@ transaction:
     mqUrl: "amqp://rabbitmq"
   service:
     type: NodePort
+
+user:
+  image:
+    repository: "yaswanthreddy1602/user-service"
+    tag: "v1"
+  replicas: 2
+  port: "3001"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  env:
+    dbHost: "mysql"
+    dbUser: "root"
+    dbPass: "rootpassword"
+    dbName: "banking_db"
+    redisHost: "redis"
+  service:
+    type: NodePort

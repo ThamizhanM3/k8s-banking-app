@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-user-deployment
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.user.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-user
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-user
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-user-container
+          image: {{ .Values.user.image.repository }}:{{ .Values.user.image.tag }}
+          resources:
+            requests:
+              memory: {{ .Values.user.resources.requests.memory }}
+              cpu: {{ .Values.user.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.user.resources.limits.memory }}
+              cpu: {{ .Values.user.resources.limits.cpu }}
+          ports:
+            - containerPort: {{ .Values.user.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-user-config
+            - secretRef:
+                name: {{ .Chart.Name }}-user-secret
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.user.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.user.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.user.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
