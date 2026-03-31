@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-config
+  name: {{ .Chart.Name }}-config-deployment
   namespace: {{ .Values.namespace }}
 spec: 
   replicas: {{ .Values.config.replicas }}

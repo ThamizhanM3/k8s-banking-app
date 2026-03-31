@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-loan
+  name: {{ .Chart.Name }}-loan-deployment
   namespace: {{ .Values.namespace }}
 spec:
   replicas: {{ .Values.loan.replicas }}

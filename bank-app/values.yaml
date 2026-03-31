@@ -172,3 +172,26 @@ service:
       memory: "256Mi"
   service:
     type: NodePort
+
+transaction:
+  image:
+    repository: "yaswanthreddy1602/transaction-service"
+    tag: "v1"
+  replicas: 2
+  port: "3003"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  env:
+    dbHost: "mysql"
+    dbUser: "root"
+    dbPass: "rootpassword"
+    dbName: "banking_db"
+    redisHost: "redis"
+    mqUrl: "amqp://rabbitmq"
+  service:
+    type: NodePort

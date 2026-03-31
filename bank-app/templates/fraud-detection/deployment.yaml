@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-fraud-detection
+  name: {{ .Chart.Name }}-fraud-deployment
   namespace: {{ .Values.namespace }}
 spec:
   replicas: {{ .Values.fraud.replicas }}
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}-fraud-detection
+      app: {{ .Chart.Name }}-fraud
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}-fraud-detection
+        app: {{ .Chart.Name }}-fraud
     spec:
       containers:
-        - name: {{ .Chart.Name }}-fraud-detection-container
+        - name: {{ .Chart.Name }}-fraud-container
           image: {{ .Values.fraud.image.repository }}:{{ .Values.fraud.image.tag }}
           resources:
             requests:
@@ -27,7 +27,7 @@ spec:
             - containerPort: {{ .Values.fraud.port }}
           envFrom:
             - configMapRef:
-                name: {{ .Chart.Name }}-fraud-detection-config
+                name: {{ .Chart.Name }}-fraud-config
           startupProbe:
             httpGet:
               path: /health
