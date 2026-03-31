@@ -9,4 +9,4 @@ spec:
     kind: Deployment
     name: {{ .Chart.Name }}-fraud-deployment-canary
   updatePolicy:
-    updateMode: {{ .Values.fraud.canary.vpa.updateMode }}
+    updateMode: "{{ .Values.fraud.canary.vpa.updateMode }}"

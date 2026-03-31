@@ -9,4 +9,4 @@ spec:
     kind: Deployment
     name: {{ .Chart.Name }}-reporting-deployment-stable
   updatePolicy:
-    updateMode: {{ .Values.reporting.stable.vpa.updateMode }}
+    updateMode: "{{ .Values.reporting.stable.vpa.updateMode }}"

@@ -9,4 +9,4 @@ spec:
     kind: Deployment
     name: {{ .Chart.Name }}-fraud-deployment-stable
   updatePolicy:
-    updateMode: {{ .Values.fraud.stable.vpa.updateMode }}
+    updateMode: "{{ .Values.fraud.stable.vpa.updateMode }}"

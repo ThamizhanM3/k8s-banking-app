@@ -9,4 +9,4 @@ spec:
     kind: Deployment
     name: {{ .Chart.Name }}-reporting-deployment-canary
   updatePolicy:
-    updateMode: {{ .Values.reporting.canary.vpa.updateMode }}
+    updateMode: "{{ .Values.reporting.canary.vpa.updateMode }}"
