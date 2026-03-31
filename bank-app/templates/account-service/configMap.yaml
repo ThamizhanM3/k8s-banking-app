@@ -4,4 +4,4 @@ metadata:
   name: {{ .Chart.Name }}-account-config
   namespace: {{ .Values.namespace }}
 data:
-  PORT: {{ .Values.account.port }}
+  PORT: "{{ .Values.account.port }}"
