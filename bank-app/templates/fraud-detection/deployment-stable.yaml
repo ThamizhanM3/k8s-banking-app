@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-fraud-deployment-stable
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-fraud
+    version: {{ .Values.fraud.stable.version }}
+spec:
+  replicas: {{ .Values.fraud.stable.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-fraud
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-fraud
+        version: {{ .Values.fraud.stable.version }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-fraud-container
+          image: {{ .Values.fraud.stable.image.repository }}:{{ .Values.fraud.stable.image.tag }}
+          resources:
+            requests:
+              memory: {{ .Values.fraud.stable.resources.requests.memory }}
+              cpu: {{ .Values.fraud.stable.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.fraud.stable.resources.limits.memory }}
+              cpu: {{ .Values.fraud.stable.resources.limits.cpu }}
+          ports:
+            - containerPort: {{ .Values.fraud.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-fraud-config
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.fraud.port }}
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.fraud.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.fraud.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3

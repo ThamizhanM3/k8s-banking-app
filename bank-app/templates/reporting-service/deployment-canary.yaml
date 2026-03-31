@@ -1,10 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-reporting-deployment
+  name: {{ .Chart.Name }}-reporting-deployment-canary
   namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-reporting
+    version: {{ .Values.reporting.canary.version }}
 spec:
-  replicas: {{ .Values.reporting.replicas }}
+  replicas: {{ .Values.reporting.canary.replicas }}
   selector:
     matchLabels:
       app: {{ .Chart.Name }}-reporting
@@ -12,17 +15,18 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}-reporting
+        version: {{ .Values.reporting.canary.version }}
     spec:
       containers:
       - name: {{ .Chart.Name }}-reporting-container
-        image: {{ .Values.reporting.image.repository }}:{{ .Values.reporting.image.tag }}
+        image: {{ .Values.reporting.canary.image.repository }}:{{ .Values.reporting.canary.image.tag }}
         resources:
           requests:
-            memory: "{{ .Values.reporting.resources.requests.memory }}"
-            cpu: "{{ .Values.reporting.resources.requests.cpu }}"
+            memory: "{{ .Values.reporting.canary.resources.requests.memory }}"
+            cpu: "{{ .Values.reporting.canary.resources.requests.cpu }}"
           limits:
-            memory: "{{ .Values.reporting.resources.limits.memory }}"
-            cpu: "{{ .Values.reporting.resources.limits.cpu }}"
+            memory: "{{ .Values.reporting.canary.resources.limits.memory }}"
+            cpu: "{{ .Values.reporting.canary.resources.limits.cpu }}"
         ports:
         - containerPort: {{ .Values.reporting.port }}
         envFrom:

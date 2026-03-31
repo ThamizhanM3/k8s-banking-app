@@ -75,10 +75,38 @@ config:
     type: NodePort
 
 fraud:
-  image:
-    repository: "yaswanthreddy1602/fraud-detection-service"
-    tag: "v1"
-  replicas: 2
+  stable:
+    version: "stable"
+    image:
+      repository: "yaswanthreddy1602/fraud-detection-service"
+      tag: "v1"
+    replicas: 2
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    vpa:
+      enabled: true
+      updateMode: "Off"
+  canary:
+    version: "canary"
+    image:
+      repository: "yaswanthreddy1602/fraud-detection-service"
+      tag: "v1"
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    vpa:
+      enabled: true
+      updateMode: "Off"
   port: "3007"
   resources:
     requests:
@@ -195,10 +223,38 @@ payment:
     type: NodePort
 
 reporting:
-  image:
-    repository: "yaswanthreddy1602/reporting-service"
-    tag: "v1"
-  replicas: 2
+  stable:
+    version: "stable"
+    image:
+      repository: "yaswanthreddy1602/reporting-service"
+      tag: "v1"
+    replicas: 2
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    vpa:
+      enabled: true
+      updateMode: "Off"
+  canary:
+    version: "canary"
+    image:
+      repository: "yaswanthreddy1602/reporting-service"
+      tag: "v1"
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    vpa:
+      enabled: true
+      updateMode: "Off"
   port: "3010"
   resources:
     requests:

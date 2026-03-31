@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-reporting-deployment-stable
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}-reporting
+    version: {{ .Values.reporting.stable.version }}
+spec:
+  replicas: {{ .Values.reporting.stable.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-reporting
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-reporting
+        version: {{ .Values.reporting.stable.version }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-reporting-container
+        image: {{ .Values.reporting.stable.image.repository }}:{{ .Values.reporting.stable.image.tag }}
+        resources:
+          requests:
+            memory: "{{ .Values.reporting.stable.resources.requests.memory }}"
+            cpu: "{{ .Values.reporting.stable.resources.requests.cpu }}"
+          limits:
+            memory: "{{ .Values.reporting.stable.resources.limits.memory }}"
+            cpu: "{{ .Values.reporting.stable.resources.limits.cpu }}"
+        ports:
+        - containerPort: {{ .Values.reporting.port }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Chart.Name }}-reporting-config
+        - secretRef:
+            name: {{ .Chart.Name }}-reporting-secret
+        startupProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.reporting.port }}
+          initialDelaySeconds: 5
+          failureThreshold: 30
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.reporting.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.reporting.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3
