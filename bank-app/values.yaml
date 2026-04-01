@@ -57,6 +57,8 @@ account:
     redisHost: "redis"
   service:
     type: NodePort
+  gateway:
+    path: /api/account
 
 config:
   image:
@@ -189,6 +191,8 @@ frontend:
     txUrl: "/api/tx"
     loanUrl: "/api/loan"
     reportUrl: "/api/report"
+  gateway:
+    path: /
 
 loan:
   stable:
@@ -211,7 +215,6 @@ loan:
       resource:
         cpu:
           UtilizationPercentage: 70
-
   canary:
     version: "canary"
     image:
@@ -232,18 +235,17 @@ loan:
       resource:
         cpu:
           UtilizationPercentage: 70
-
   port: "3005"
-
   env:
     dbHost: "{{ .Chart.Name }}-mysql-service"
     dbUser: "root"
     dbPass: "rootpassword"
     dbName: "banking_db"
     redisHost: "redis"
-
   service:
     type: NodePort
+  gateway:
+    path: /api/loan
 
 notification:
   stable:
@@ -398,6 +400,8 @@ reporting:
     dbName: "banking_db"
   service:
     type: NodePort
+  gateway:
+    path: /api/report
 
 service:
   stable:
@@ -458,7 +462,6 @@ transaction:
       resource:
         cpu:
           UtilizationPercentage: 70
-
   canary:
     version: "canary"
     image:
@@ -479,9 +482,7 @@ transaction:
       resource:
         cpu:
           UtilizationPercentage: 70
-
   port: "3003"
-
   env:
     dbHost: "{{ .Chart.Name }}-mysql-service"
     dbUser: "root"
@@ -489,9 +490,10 @@ transaction:
     dbName: "banking_db"
     redisHost: "redis"
     mqUrl: "amqp://{{ .Chart.Name }}-rabbitmq-service"
-
   service:
     type: NodePort
+  gateway:
+    path: /api/tx
 
 user:
   stable:
@@ -550,6 +552,8 @@ user:
     redisHost: "redis"
   service:
     type: NodePort
+  gateway:
+    path: /api/user
 
 mysql:
   image: "mysql:8.0"
@@ -655,3 +659,4 @@ redis:
   port: 6379
   service:
     type: ClusterIP
+
