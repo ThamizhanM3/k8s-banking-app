@@ -4,7 +4,7 @@ metadata:
   name: {{ .Chart.Name }}-mysql
   namespace: {{ .Values.namespace }}
 spec:
-  serviceName: {{ .Values.mysql.serviceName }}
+  serviceName: {{ .Chart.Name }}-mysql-service
   replicas: {{ .Values.mysql.replicas }}
   selector:
     matchLabels:
