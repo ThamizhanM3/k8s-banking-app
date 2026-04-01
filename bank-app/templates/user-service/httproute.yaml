@@ -19,4 +19,4 @@ spec:
           replacePrefixMatch: /
     backendRefs:
     - name: {{ .Chart.Name }}-user-service
-      port: {{ .Values.user.service.port }}
+      port: {{ .Values.user.port }}
