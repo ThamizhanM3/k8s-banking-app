@@ -56,7 +56,7 @@ account:
     dbName: "banking_db"
     redisHost: "redis"
   service:
-    type: NodePort
+    type: ClusterIP
   gateway:
     path: /api/account
 
@@ -74,7 +74,7 @@ config:
       cpu: "100m"
       memory: "256Mi"
   service:
-    type: NodePort
+    type: ClusterIP
   stable:
     version: "stable"
     image:
@@ -144,7 +144,7 @@ fraud:
       cpu: "100m"
       memory: "256Mi"
   service:
-    type: NodePort
+    type: ClusterIP
   env:
     mqUrl: "amqp://{{ .Chart.Name }}-rabbitmq-service"
 
@@ -184,7 +184,7 @@ frontend:
       cpu: "100m"
       memory: "256Mi"
   service:
-    type: NodePort
+    type: ClusterIP
   env:
     userUrl: "/api/user"
     accountUrl: "/api/account"
@@ -243,7 +243,7 @@ loan:
     dbName: "banking_db"
     redisHost: "redis"
   service:
-    type: NodePort
+    type: ClusterIP
   gateway:
     path: /api/loan
 
@@ -297,7 +297,7 @@ notification:
       cpu: "100m"
       memory: "256Mi"
   service:
-    type: NodePort
+    type: ClusterIP
   env:
     mqUrl: "amqp://{{ .Chart.Name }}-rabbitmq-service"
   
@@ -350,7 +350,7 @@ payment:
     accountUrl: "http://account-service:3002"
 
   service:
-    type: NodePort
+    type: ClusterIP
 
 reporting:
   stable:
@@ -399,7 +399,7 @@ reporting:
     dbPass: "rootpassword"
     dbName: "banking_db"
   service:
-    type: NodePort
+    type: ClusterIP
   gateway:
     path: /api/report
 
@@ -439,7 +439,7 @@ service:
       cpu: "100m"
       memory: "256Mi"
   service:
-    type: NodePort
+    type: ClusterIP
 
 transaction:
   stable:
@@ -491,7 +491,7 @@ transaction:
     redisHost: "redis"
     mqUrl: "amqp://{{ .Chart.Name }}-rabbitmq-service"
   service:
-    type: NodePort
+    type: ClusterIP
   gateway:
     path: /api/tx
 
@@ -551,7 +551,7 @@ user:
     dbName: "banking_db"
     redisHost: "redis"
   service:
-    type: NodePort
+    type: ClusterIP
   gateway:
     path: /api/user
 
