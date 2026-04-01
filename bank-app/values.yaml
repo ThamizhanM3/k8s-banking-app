@@ -144,7 +144,7 @@ fraud:
   service:
     type: NodePort
   env:
-    mqUrl: "amqp://rabbitmq"
+    mqUrl: "amqp://{{ .Chart.Name }}-rabbitmq-service"
 
 frontend:
   stable:
@@ -297,7 +297,7 @@ notification:
   service:
     type: NodePort
   env:
-    mqUrl: "amqp://rabbitmq"
+    mqUrl: "amqp://{{ .Chart.Name }}-rabbitmq-service"
   
 payment:
   stable:
@@ -488,7 +488,7 @@ transaction:
     dbPass: "rootpassword"
     dbName: "banking_db"
     redisHost: "redis"
-    mqUrl: "amqp://rabbitmq"
+    mqUrl: "amqp://{{ .Chart.Name }}-rabbitmq-service"
 
   service:
     type: NodePort
@@ -641,3 +641,17 @@ rabbitmq:
       memory: "256Mi"
       cpu: "100m"
   clusterIP: None
+
+redis:
+  replicas: 1
+  image: "redis:7-alpine"
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+  port: 6379
+  service:
+    type: ClusterIP
