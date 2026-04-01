@@ -5,6 +5,10 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Chart.Name }}-gateway
+  annotations:
+    gateway.kgateway.io/proxy-readiness-port: "19000"
+    gateway.kgateway.io/proxy-startup-port: "19000"
+
 spec:
   gatewayClassName: kgateway
   listeners:
