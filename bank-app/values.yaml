@@ -50,7 +50,7 @@ account:
       cpu: "100m"
       memory: "256Mi"
   env:
-    dbHost: {{ .Chart.Name }}-mysql-service
+    dbHost: "{{ .Chart.Name }}-mysql-service"
     dbUser: "root"
     dbPass: "rootpassword"
     dbName: "banking_db"
@@ -236,7 +236,7 @@ loan:
   port: "3005"
 
   env:
-    dbHost: {{ .Chart.Name }}-mysql-service
+    dbHost: "{{ .Chart.Name }}-mysql-service"
     dbUser: "root"
     dbPass: "rootpassword"
     dbName: "banking_db"
@@ -392,7 +392,7 @@ reporting:
       cpu: "100m"
       memory: "256Mi"
   env:
-    dbHost: {{ .Chart.Name }}-mysql-service
+    dbHost: "{{ .Chart.Name }}-mysql-service"
     dbUser: "root"
     dbPass: "rootpassword"
     dbName: "banking_db"
@@ -483,7 +483,7 @@ transaction:
   port: "3003"
 
   env:
-    dbHost: {{ .Chart.Name }}-mysql-service
+    dbHost: "{{ .Chart.Name }}-mysql-service"
     dbUser: "root"
     dbPass: "rootpassword"
     dbName: "banking_db"
@@ -543,7 +543,7 @@ user:
       cpu: "100m"
       memory: "256Mi"
   env:
-    dbHost: {{ .Chart.Name }}-mysql-service
+    dbHost: "{{ .Chart.Name }}-mysql-service"
     dbUser: "root"
     dbPass: "rootpassword"
     dbName: "banking_db"
