@@ -553,7 +553,7 @@ user:
 
 mysql:
   image: mysql:8.0
-  serviceName: "mysql"
+  serviceName: {{ .Chart.Name }}-mysql-service
   replicas: 3
   port: 3306
   resources:
