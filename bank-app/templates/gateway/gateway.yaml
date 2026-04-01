@@ -4,7 +4,7 @@ metadata:
   name: {{ .Chart.Name }}-gateway
   namespace: {{ .Values.namespace }}
   labels:
-  app: {{ .Chart.Name }}-gateway
+    app: {{ .Chart.Name }}-gateway
 spec:
   gatewayClassName: kgateway
   listeners:
